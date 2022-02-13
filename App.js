@@ -38,7 +38,7 @@ const App = () => {
     }
   }
   const handleGasto = (gasto) => {
-    if(Object.values(gasto).includes('')){
+    if([gasto.nombre, gasto.categoria, gasto.cantidad].includes('')){
       Alert.alert(
         "Error",
         "Todos los campos son obligatorios"
@@ -46,12 +46,34 @@ const App = () => {
       return
     }
 
-    //añadir el nuevo gasto al state
-    gasto.id = generarId()
-    gasto.fecha = Date.now()
+    if(gasto.id){
+      const gastosActualizados = gastos.map( gastoState => gastoState.id === gasto.id ? gasto : gastoState)
 
-    setGastos([...gastos, gasto])
+      setGastos(gastosActualizados)
+    }else{
+      gasto.id = generarId()
+      gasto.fecha = Date.now()
+
+      setGastos([...gastos, gasto])
+    }    
     setModal(!modal) 
+  }
+
+  const eliminarGasto = (id) =>{
+    Alert.alert(
+      "¿Deseas eliminar este registro?",
+      "Un gasto eliminado no puede restaurarse",
+      [
+        { text: 'No', style: 'cancel'},
+        { text: 'Si, Eliminar', onPress: () => {
+          const gastosActualizados = gastos.filter( gastoState => gastoState.id !== id )
+
+          setGastos(gastosActualizados)
+          setModal(!modal)
+          setGasto({})
+        }}
+      ]
+    );
   }
 
   return (
@@ -97,6 +119,7 @@ const App = () => {
             handleGasto={handleGasto}
             setGasto={setGasto}
             gasto={gasto}
+            eliminarGasto={eliminarGasto}
           />
         </Modal>
       )}
@@ -138,20 +161,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60
   }
-  // pressable: {
-  //   width: 60,
-  //   height: 60, 
-  //   position: 'absolute',
-  //   bottom: -200,
-  //   right: 30
-  // },  
-  // imagen: {
-  //   width: 60,
-  //   height: 60,
-  //   //position: 'absolute',
-  //   bottom: 40,
-  //   right: 30
-  // }
 });
 
 export default App;
