@@ -1,112 +1,135 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+import React, { useState } from 'react';
+import { Alert,
+    Image,
+    Modal, 
+    Pressable, 
+    SafeAreaView, 
+    ScrollView, 
+    StatusBar, 
+    StyleSheet, 
+    Text,
+    View 
 } from 'react-native';
+import ControlPresupuesto from './src/components/ControlPresupuesto';
+import FormularioGasto from './src/components/FormularioGasto';
+import Header from './src/components/Header';
+import ListadoGastos from './src/components/ListadoGastos';
+import NuevoPresupuesto from './src/components/NuevoPresupuesto';
+import { generarId } from './src/helpers';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const App = () => {
+  const [ isValidPresupuesto, setIsValidPresupuesto] = useState(false)
+  const [presupuesto, setPresupuesto] = useState(0)
+  const [gastos, setGastos] = useState([])
+  const [ modal, setModal ] = useState(false)
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const handleNuevoPresupuesto = (presupuesto) =>{
+    if(Number(presupuesto) > 0 ){
+      setIsValidPresupuesto(true)
+    }else{
+      console.log('Error')
+      Alert.alert(
+        "Error",
+        "Presupuesto no puede ser 0 o menor",
+        [
+          { text: "OK" }
+        ]
+      );
+    }
+  }
+  const handleGasto = (gasto) => {
+    if(Object.values(gasto).includes('')){
+      Alert.alert(
+        "Error",
+        "Todos los campos son obligatorios"
+      );
+      return
+    }
+
+    //añadir el nuevo gasto al state
+    gasto.id = generarId()
+    setGastos([...gastos, gasto])
+    console.log(gastos)
+    setModal(!modal)
+    
+  }
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View>
+      <View style={styles.header}>
+        
+        <Header/>
+
+        {isValidPresupuesto ? (
+          <ControlPresupuesto
+            gastos={gastos}
+            presupuesto={presupuesto}
+          />
+        ) : (
+          <NuevoPresupuesto
+            presupuesto={presupuesto}
+            setPresupuesto={setPresupuesto}
+            handleNuevoPresupuesto = { handleNuevoPresupuesto }
+          />
+        )}
+      </View>
+      {isValidPresupuesto &&
+        <ListadoGastos
+          gastos={gastos}
+        />
+      }
+      
+      {modal && (
+        <Modal
+          animationType='slide'
+          visible={modal}
+          onRequestClose={()=>{
+            setModal(!modal)
+          }}
+        >
+          <FormularioGasto
+            setModal={setModal}
+            handleGasto={handleGasto}
+          />
+        </Modal>
+      )}
+
+      {isValidPresupuesto && (
+        <Pressable
+          style={styles.pressable}
+          onPress={() => setModal(!modal)}
+        >
+          <Image
+            style={styles.imagen}
+            source={ require('./src/img/nuevo-gasto.png')}
+          />
+        </Pressable>
+      )}
+
+      
     </View>
   );
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  contenedor:{
+    backgroundColor: '#F5F5F5',
+    flex: 1 
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  header:{
+    backgroundColor: '#3B82F6'
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  pressable: {
+    width: 60,
+    height: 60, 
+    position: 'absolute',
+    bottom: -200,
+    right: 30
+  },  
+  imagen: {
+    width: 60,
+    height: 60,
+  }
 });
 
 export default App;
