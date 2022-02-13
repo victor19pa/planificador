@@ -22,12 +22,12 @@ const App = () => {
   const [presupuesto, setPresupuesto] = useState(0)
   const [gastos, setGastos] = useState([])
   const [ modal, setModal ] = useState(false)
+  const [gasto, setGasto] = useState({})
 
   const handleNuevoPresupuesto = (presupuesto) =>{
     if(Number(presupuesto) > 0 ){
       setIsValidPresupuesto(true)
     }else{
-      console.log('Error')
       Alert.alert(
         "Error",
         "Presupuesto no puede ser 0 o menor",
@@ -48,14 +48,15 @@ const App = () => {
 
     //añadir el nuevo gasto al state
     gasto.id = generarId()
+    gasto.fecha = Date.now()
+
     setGastos([...gastos, gasto])
-    console.log(gastos)
-    setModal(!modal)
-    
+    setModal(!modal) 
   }
 
   return (
     <View>
+      <ScrollView>
       <View style={styles.header}>
         
         <Header/>
@@ -73,11 +74,15 @@ const App = () => {
           />
         )}
       </View>
+
       {isValidPresupuesto &&
         <ListadoGastos
           gastos={gastos}
+          setModal={setModal}
+          setGasto={setGasto}
         />
       }
+      </ScrollView>
       
       {modal && (
         <Modal
@@ -90,6 +95,8 @@ const App = () => {
           <FormularioGasto
             setModal={setModal}
             handleGasto={handleGasto}
+            setGasto={setGasto}
+            gasto={gasto}
           />
         </Modal>
       )}
@@ -117,19 +124,34 @@ const styles = StyleSheet.create({
     flex: 1 
   },
   header:{
-    backgroundColor: '#3B82F6'
+    backgroundColor: '#3B82F6',
+    minHeight: 400
   },
   pressable: {
     width: 60,
     height: 60, 
     position: 'absolute',
-    bottom: -200,
+    bottom: 40,
     right: 30
   },  
   imagen: {
     width: 60,
-    height: 60,
+    height: 60
   }
+  // pressable: {
+  //   width: 60,
+  //   height: 60, 
+  //   position: 'absolute',
+  //   bottom: -200,
+  //   right: 30
+  // },  
+  // imagen: {
+  //   width: 60,
+  //   height: 60,
+  //   //position: 'absolute',
+  //   bottom: 40,
+  //   right: 30
+  // }
 });
 
 export default App;

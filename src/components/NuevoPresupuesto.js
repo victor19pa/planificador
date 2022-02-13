@@ -3,11 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import globalStyles from '../styles'
 
 
-const NuevoPresupuesto = ({
-    handleNuevoPresupuesto, 
-    presupuesto, 
-    setPresupuesto
-}) => {
+const NuevoPresupuesto = ({handleNuevoPresupuesto, presupuesto, setPresupuesto}) => {
 
     return (
         <View style={styles.contenedor}>
