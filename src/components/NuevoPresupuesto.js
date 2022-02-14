@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import globalStyles from '../styles'
 
-
 const NuevoPresupuesto = ({handleNuevoPresupuesto, presupuesto, setPresupuesto}) => {
-
     return (
         <View style={styles.contenedor}>
             <Text style={styles.label}>Definir Presupuesto</Text>
-
+            {/**VENTANA PRINCIPAL PARA AGREGAR EL PRESUPUESTO INICIAL */}
             <TextInput
                 keyboardType='numeric'
                 placeholder='Agrega tu presupuesto: Ej. 300'

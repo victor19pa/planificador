@@ -14,15 +14,12 @@ const diccionarioIconos={
     entretenimiento: require('../img/icono_ocio.png')
     
 }
-
 const Gasto = ({gasto, setModal, setGasto}) => {
-
     const { nombre, categoria, cantidad, fecha } = gasto 
     const handleAcciones=()=>{
         setModal(true)
         setGasto(gasto)
     }
-
     return (
         <Pressable
             onLongPress={handleAcciones}

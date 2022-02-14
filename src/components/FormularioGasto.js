@@ -10,6 +10,7 @@ const FormularioGasto = ({setModal, handleGasto, setGasto, gasto, eliminarGasto}
     const [ id, setId] = useState('')
     const [ fecha, setFecha ] = useState('')
 
+    //agregar datos useState con los datos del array gastos
     useEffect(() => {
         if(gasto?.nombre){
             setNombre(gasto.nombre)
@@ -22,6 +23,7 @@ const FormularioGasto = ({setModal, handleGasto, setGasto, gasto, eliminarGasto}
 
     return (
         <SafeAreaView style={styles.contenedor}>
+            {/***Botones Cancelar o Eliminar */}
             <View style={styles.contenedorBotones}>
                 <Pressable 
                     style={[styles.btn ,styles.btnCancelar]}
@@ -42,6 +44,7 @@ const FormularioGasto = ({setModal, handleGasto, setGasto, gasto, eliminarGasto}
                 )}
             </View>
 
+            {/**Tarjeta nuevo gasto o edicion gasto */}
             <View style={styles.formulario}>
                 <Text style={styles.titulo}>
                     {gasto?.nombre ? 'Editar Gasto' : 'Nuevo Gasto'}    

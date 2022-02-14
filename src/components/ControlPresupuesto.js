@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { formatearCantidad } from '../helpers'
 import globalStyles from '../styles'
 import CircularProgress from 'react-native-circular-progress-indicator';
 
-const ControlPresupuesto = ({presupuesto, gastos}) => {
+const ControlPresupuesto = ({presupuesto, gastos, resetearApp}) => {
     const [disponible, setDisponible] = useState(0)
     const [gastado, setGastado] = useState(0)
     const [ porcentaje, setPorcentaje ] = useState(0)
-    
-
+    //Calculo de porcentaje, usando la suma del total gastado y lo disponible
     useEffect(() =>{
         const totalGastado = gastos.reduce( (total, gasto) => Number(gasto.cantidad) + total, 0)
         const totalDisponible = presupuesto-totalGastado
@@ -28,6 +27,7 @@ const ControlPresupuesto = ({presupuesto, gastos}) => {
 
     return (
         <View style={styles.contenedor}>
+            {/***Barra progreso */}
             <View style={styles.centrarGrafica}>
                 <CircularProgress 
                     value={ porcentaje }
@@ -44,8 +44,15 @@ const ControlPresupuesto = ({presupuesto, gastos}) => {
                     titleColor= {'#64748B'}
                 />
             </View>
-
+            {/**datos recuadro principal */}
             <View style={styles.contenedorTexto} >
+                <Pressable
+                    style={styles.boton}
+                    onPress={resetearApp}
+                >
+                    <Text style={styles.txtBoton}>Reiniciar App</Text>
+                </Pressable>
+
                 <Text style={styles.valor} >
                     <Text style={styles.label}>Presupuesto: {''}</Text>
                     {formatearCantidad(presupuesto)}
@@ -72,10 +79,6 @@ const styles = StyleSheet.create({
     centrarGrafica:{
         alignItems: 'center'
     },
-    imagen:{
-        width: 250,
-        height: 250
-    },
     contenedorTexto:{
         marginTop: 50
     },
@@ -87,6 +90,18 @@ const styles = StyleSheet.create({
     label:{
         fontWeight: '700',
         color: '#3B82F6'
+    },
+    boton:{
+        backgroundColor: '#DB2777',
+        padding: 10,
+        borderRadius: 8,
+        marginBottom: 40
+    },
+    txtBoton:{
+        textAlign: 'center',
+        color: '#FFF',
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
     }
 })
 

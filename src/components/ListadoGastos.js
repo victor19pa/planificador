@@ -7,7 +7,7 @@ const ListadoGastos = ({gastos, setModal, setGasto, filtro, gastosFiltrados}) =>
     return (
     <View style={styles.contenedor}>
         <Text style={styles.titulo}>Gastos</Text>
-
+        {/***recorrer los gastos para mostrar */}
         { filtro ? gastosFiltrados.map( gasto => (
             <Gasto
                 key={gasto.id}
@@ -23,8 +23,8 @@ const ListadoGastos = ({gastos, setModal, setGasto, filtro, gastosFiltrados}) =>
                 setGasto={setGasto}
             />
         ))}
-
-        {gastos.length === 0 || (gastosFiltrados.length === 0 && !!filtro) &&(
+        {/***Evaluar si no hay gastos para mostrar el label "NO HAY GASTOS" */}
+        { (gastos.length === 0 || (gastosFiltrados.length === 0 && !!filtro)) &&(
                 <Text style={styles.noGastos}>No hay gastos</Text>
             )
         }
