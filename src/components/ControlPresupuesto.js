@@ -7,12 +7,21 @@ import CircularProgress from 'react-native-circular-progress-indicator';
 const ControlPresupuesto = ({presupuesto, gastos}) => {
     const [disponible, setDisponible] = useState(0)
     const [gastado, setGastado] = useState(0)
+    const [ porcentaje, setPorcentaje ] = useState(0)
     
 
     useEffect(() =>{
         const totalGastado = gastos.reduce( (total, gasto) => Number(gasto.cantidad) + total, 0)
         const totalDisponible = presupuesto-totalGastado
         //console.log(totalGastado)
+
+        const nuevoPorcentaje = (
+            ((presupuesto - totalDisponible) / presupuesto)*100
+        )
+        setTimeout(() => {
+            setPorcentaje(nuevoPorcentaje)    
+        }, 500)
+        
         setGastado(totalGastado)
         setDisponible(totalDisponible)
     },[gastos])
@@ -21,7 +30,7 @@ const ControlPresupuesto = ({presupuesto, gastos}) => {
         <View style={styles.contenedor}>
             <View style={styles.centrarGrafica}>
                 <CircularProgress 
-                    value={0}
+                    value={ porcentaje }
                     duration={1300}
                     radius={150}
                     valueSuffix={'%'}
